@@ -43,6 +43,7 @@ export class Engine {
           (this.gridOffset.y + y) * 0.1
         );
         cell.height = noise;
+        console.log(noise);
         cell.color = Color.rgbToHex(noise * 255, noise * 255, noise * 255);
         this.grid[x][y] = cell;
       }

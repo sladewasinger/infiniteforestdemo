@@ -42,17 +42,19 @@ export class Renderer {
   }
 
   update(grid) {
-    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00, 0xffffff];
+    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00, 0xaaaaaa];
     for (let x = 0; x < this.grid.length; x++) {
       for (let y = 0; y < this.grid[x].length; y++) {
         const cellGraphics = this.grid[x][y];
         cellGraphics.clear();
         let color;
         if (grid[x][y].height > 0.7) {
-          color = colorMap[3];
+          color = colorMap[4];
         } else if (grid[x][y].height > 0.4) {
-          color = colorMap[2];
+          color = colorMap[3];
         } else if (grid[x][y].height > 0.3) {
+          color = colorMap[2];
+        } else if (grid[x][y].height > 0.2) {
           color = colorMap[1];
         } else {
           color = colorMap[0];
