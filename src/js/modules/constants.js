@@ -6,6 +6,6 @@ export class Constants {
     return 16;
   }
   static get CELL_PADDING() {
-    return 1;
+    return 0;
   }
 }
