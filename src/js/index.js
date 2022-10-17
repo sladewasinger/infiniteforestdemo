@@ -1,4 +1,4 @@
-import { Renderer } from "./modules/Renderer.js";
+import { Engine } from "./modules/engine.js";
 
-const renderer = new Renderer();
-renderer.render();
+const engine = new Engine();
+engine.init();
