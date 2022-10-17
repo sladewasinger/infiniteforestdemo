@@ -16,6 +16,15 @@ export class Renderer {
     this.camera = new Camera(this.app.screen.width, this.app.screen.height);
     this.app.stage.addChild(this.camera.container);
     this.mouse = new Mouse();
+    window.addEventListener("scroll", this.onScroll.bind(this));
+  }
+
+  onScroll(e) {
+    if (e.deltaY > 0) {
+      this.camera.zoom += 0.01;
+    } else {
+      this.camera.zoom -= 0.01;
+    }
   }
 
   init(grid) {
