@@ -8,7 +8,7 @@ export class Engine {
   constructor() {
     this.grid = [];
     this.renderer = new Renderer();
-    this.perlinNoise = new PerlinNoise(0.1);
+    this.perlinNoise = new PerlinNoise(0.3);
     this.keys = {};
     this.gridOffset = { x: 0, y: 0 };
     window.addEventListener("keydown", this.keyDown.bind(this));

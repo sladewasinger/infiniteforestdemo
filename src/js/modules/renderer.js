@@ -42,13 +42,18 @@ export class Renderer {
   }
 
   update(grid) {
-    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00];
+    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00, 0xffffff];
     for (let x = 0; x < this.grid.length; x++) {
       for (let y = 0; y < this.grid[x].length; y++) {
         const cellGraphics = this.grid[x][y];
         cellGraphics.clear();
-        const color = colorMap[Math.floor(grid[x][y].height * colorMap.length)];
+        const color =
+          colorMap[Math.floor(grid[x][y].height * (colorMap.length - 1))];
         cellGraphics.beginFill(color);
+
+        if (color == undefined) {
+          console.log("color is undefined");
+        }
         cellGraphics.drawRect(
           grid[x][y].x * (Constants.CELL_WIDTH + Constants.CELL_PADDING),
           grid[x][y].y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING),
