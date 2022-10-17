@@ -47,13 +47,17 @@ export class Renderer {
       for (let y = 0; y < this.grid[x].length; y++) {
         const cellGraphics = this.grid[x][y];
         cellGraphics.clear();
-        const color =
-          colorMap[Math.floor(grid[x][y].height * (colorMap.length - 1))];
-        cellGraphics.beginFill(color);
-
-        if (color == undefined) {
-          console.log("color is undefined");
+        let color;
+        if (grid[x][y].height > 0.7) {
+          color = colorMap[3];
+        } else if (grid[x][y].height > 0.4) {
+          color = colorMap[2];
+        } else if (grid[x][y].height > 0.3) {
+          color = colorMap[1];
+        } else {
+          color = colorMap[0];
         }
+        cellGraphics.beginFill(color);
         cellGraphics.drawRect(
           grid[x][y].x * (Constants.CELL_WIDTH + Constants.CELL_PADDING),
           grid[x][y].y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING),
