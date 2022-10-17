@@ -30,15 +30,23 @@ export class Renderer {
   }
 
   init(grid) {
+    let gridContainer = new PIXI.Container();
+    gridContainer.position = new PIXI.Point(
+      this.app.screen.width / 2 - (grid.length * Constants.CELL_WIDTH) / 2,
+      this.app.screen.height / 2 - (grid.length * Constants.CELL_HEIGHT) / 2
+    );
+
     for (let x = 0; x < grid.length; x++) {
       this.grid[x] = [];
       for (let y = 0; y < grid[x].length; y++) {
         const cell = grid[x][y];
         const cellGraphics = new PIXI.Graphics();
-        this.camera.container.addChild(cellGraphics);
+        gridContainer.addChild(cellGraphics);
         this.grid[x][y] = cellGraphics;
       }
     }
+
+    this.camera.container.addChild(gridContainer);
   }
 
   update(grid) {
