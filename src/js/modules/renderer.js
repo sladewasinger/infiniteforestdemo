@@ -8,44 +8,61 @@ export class Renderer {
     this.app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight,
-      antialias: true,
+      antialias: false,
       transparent: false,
       resolution: 1,
       view: this.canvas,
     });
+    this.grid = [];
     this.camera = new Camera(this.app.screen.width, this.app.screen.height);
     this.app.stage.addChild(this.camera.container);
     this.mouse = new Mouse();
-    window.addEventListener("scroll", this.onScroll.bind(this));
+    this.canvas.addEventListener("wheel", this.onMouseWheel.bind(this));
+    // this.camera.zoom = window.innerWidth / Constants.CELL_WIDTH / 11;
   }
 
-  onScroll(e) {
-    if (e.deltaY > 0) {
-      this.camera.zoom += 0.01;
+  onMouseWheel(e) {
+    if (e.deltaY < 0) {
+      this.camera.zoom += 0.1;
     } else {
-      this.camera.zoom -= 0.01;
+      this.camera.zoom -= 0.1;
     }
   }
 
   init(grid) {
     for (let x = 0; x < grid.length; x++) {
+      this.grid[x] = [];
       for (let y = 0; y < grid[x].length; y++) {
         const cell = grid[x][y];
         const cellGraphics = new PIXI.Graphics();
-        cellGraphics.beginFill(cell.color);
-        cellGraphics.drawRect(
-          cell.x * (Constants.CELL_WIDTH + Constants.CELL_PADDING),
-          cell.y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING),
-          cell.width,
-          cell.height
-        );
-        cellGraphics.endFill();
         this.camera.container.addChild(cellGraphics);
+        this.grid[x][y] = cellGraphics;
       }
     }
   }
 
   update(grid) {
+    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00];
+    for (let x = 0; x < this.grid.length; x++) {
+      for (let y = 0; y < this.grid[x].length; y++) {
+        const cellGraphics = this.grid[x][y];
+        cellGraphics.clear();
+        const color = colorMap[Math.floor(grid[x][y].height * colorMap.length)];
+        cellGraphics.beginFill(color);
+        cellGraphics.drawRect(
+          grid[x][y].x * (Constants.CELL_WIDTH + Constants.CELL_PADDING),
+          grid[x][y].y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING),
+          Constants.CELL_WIDTH,
+          Constants.CELL_HEIGHT
+        );
+        cellGraphics.endFill();
+      }
+    }
+
+    this.camera.container.scale = new PIXI.Point(
+      this.camera.zoom,
+      this.camera.zoom
+    );
     this.mouse.setPosition(
       this.app.renderer.plugins.interaction.mouse.global.x,
       this.app.renderer.plugins.interaction.mouse.global.y
