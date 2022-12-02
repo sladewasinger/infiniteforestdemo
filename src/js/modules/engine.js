@@ -60,7 +60,7 @@ export class Engine {
 
   updateGrid2() {
     const origin = this.gridOffset;
-    const chunkDistance = 5;
+    const chunkDistance = 3;
     const chunkSize = Constants.CHUNK_SIZE;
 
     // snap origin to chunkSize 

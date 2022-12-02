@@ -111,6 +111,7 @@ export class Renderer {
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
+
       for (let x = 0; x < chunk.grid.length; x++) {
         for (let y = 0; y < chunk.grid[x].length; y++) {
           const cell = chunk.grid[x][y];
@@ -126,6 +127,8 @@ export class Renderer {
           } else {
             color = colorMap[0];
           }
+
+          this.graphics.lineStyle(0);
           this.graphics.beginFill(color);
           this.graphics.drawRect(
             (cell.x + chunk.x) * (Constants.CELL_WIDTH + Constants.CELL_PADDING) + offset.x,
@@ -135,6 +138,19 @@ export class Renderer {
           );
           this.graphics.endFill();
         }
+      }
+    }
+
+    if (Constants.DRAW_CHUNK_BOUNDARIES) {
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        this.graphics.lineStyle(2, 0xff0000, 1);
+        this.graphics.drawRect(
+          chunk.x * (Constants.CELL_WIDTH + Constants.CELL_PADDING) + offset.x,
+          chunk.y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING) + offset.y,
+          chunk.grid.length * (Constants.CELL_WIDTH + Constants.CELL_PADDING),
+          chunk.grid.length * (Constants.CELL_HEIGHT + Constants.CELL_PADDING)
+        );
       }
     }
 

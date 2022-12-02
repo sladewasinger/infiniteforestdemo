@@ -6,9 +6,12 @@ export class Constants {
     return 16;
   }
   static get CELL_PADDING() {
-    return 1;
+    return 0;
   }
   static get CHUNK_SIZE() {
     return 5;
+  }
+  static get DRAW_CHUNK_BOUNDARIES() {
+    return true;
   }
 }
