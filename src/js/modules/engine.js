@@ -86,8 +86,8 @@ export class Engine {
     }
 
     // Add chunks that are now visible
-    for (let x = gridX - chunkSize * chunkDistance; x < gridX + chunkSize * chunkDistance; x += chunkSize) {
-      for (let y = gridY - chunkSize * chunkDistance; y < gridY + chunkSize * chunkDistance; y += chunkSize) {
+    for (let x = gridX - chunkSize * chunkDistance; x <= gridX + chunkSize * chunkDistance; x += chunkSize) {
+      for (let y = gridY - chunkSize * chunkDistance; y <= gridY + chunkSize * chunkDistance; y += chunkSize) {
         let chunk = this.chunks.find((c) => c.x == x && c.y == y);
         if (!chunk) {
           chunk = new Chunk(x, y);
