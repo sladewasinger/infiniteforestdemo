@@ -1,6 +1,7 @@
 import { Camera } from "./camera.js";
 import { Constants } from "./constants.js";
 import { Mouse } from "./mouse.js";
+import { Vector2d } from "./vector2d.js";
 
 export class Renderer {
   constructor() {
@@ -15,6 +16,8 @@ export class Renderer {
     });
     this.grid = [];
     this.camera = new Camera(this.app.screen.width, this.app.screen.height);
+    this.graphics = new PIXI.Graphics();
+    this.camera.container.addChild(this.graphics);
     this.app.stage.addChild(this.camera.container);
     this.mouse = new Mouse();
     this.canvas.addEventListener("wheel", this.onMouseWheel.bind(this));
@@ -85,6 +88,62 @@ export class Renderer {
     this.mouse.setPosition(
       this.app.renderer.plugins.interaction.mouse.global.x,
       this.app.renderer.plugins.interaction.mouse.global.y
+    );
+  }
+
+  render(chunks, origin) {
+    this.graphics.clear();
+    this.mouse.setPosition(
+      this.app.renderer.plugins.interaction.mouse.global.x,
+      this.app.renderer.plugins.interaction.mouse.global.y
+    );
+
+
+    this.camera.x = origin.x * (Constants.CELL_WIDTH + Constants.CELL_PADDING);
+    this.camera.y = origin.y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING);
+
+    const offset = new Vector2d(
+      this.canvas.width / 2 - this.camera.x,
+      this.canvas.height / 2 - this.camera.y
+    );
+
+    const colorMap = [0x000044, 0x0000ff, 0xffaa00, 0x00ff00, 0xaaaaaa];
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      for (let x = 0; x < chunk.grid.length; x++) {
+        for (let y = 0; y < chunk.grid[x].length; y++) {
+          const cell = chunk.grid[x][y];
+          let color;
+          if (cell.height > 0.7) {
+            color = colorMap[4];
+          } else if (cell.height > 0.4) {
+            color = colorMap[3];
+          } else if (cell.height > 0.3) {
+            color = colorMap[2];
+          } else if (cell.height > 0.2) {
+            color = colorMap[1];
+          } else {
+            color = colorMap[0];
+          }
+          this.graphics.beginFill(color);
+          this.graphics.drawRect(
+            (cell.x + chunk.x) * (Constants.CELL_WIDTH + Constants.CELL_PADDING) + offset.x,
+            (cell.y + chunk.y) * (Constants.CELL_HEIGHT + Constants.CELL_PADDING) + offset.y,
+            Constants.CELL_WIDTH,
+            Constants.CELL_HEIGHT
+          );
+          this.graphics.endFill();
+        }
+      }
+    }
+
+    this.graphics.beginFill(0xff0000);
+    this.graphics.drawRect(
+      origin.x * (Constants.CELL_WIDTH + Constants.CELL_PADDING) + offset.x,
+      origin.y * (Constants.CELL_HEIGHT + Constants.CELL_PADDING) + offset.y,
+      Constants.CELL_WIDTH,
+      Constants.CELL_HEIGHT
     );
   }
 }

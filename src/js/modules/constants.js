@@ -6,6 +6,9 @@ export class Constants {
     return 16;
   }
   static get CELL_PADDING() {
-    return 0;
+    return 1;
+  }
+  static get CHUNK_SIZE() {
+    return 5;
   }
 }

@@ -1,7 +1,7 @@
 export class Cell {
-  constructor(x, y) {
+  constructor(x, y, height = 0) {
     this.x = x;
     this.y = y;
-    this.height = 0;
+    this.height = height;
   }
 }
