@@ -34,14 +34,20 @@ export class Engine {
     this.renderer = new Renderer();
     this.perlinNoise = new PerlinNoise(0.3);
     this.keys = {};
-    this.debounce = false;
+    this.inputDebounce = false;
     this.gridOffset = { x: 0, y: 0 };
     this.chunks = [];
+    this.handleInputTimerId = null;
     window.addEventListener("keydown", this.keyDown.bind(this));
     window.addEventListener("keyup", this.keyUp.bind(this));
   }
 
   keyDown(e) {
+    if (!this.keys[e.key]) {
+      this.keys[e.key] = true;
+      this.inputDebounce = false;
+      this.handleInput();
+    }
     this.keys[e.key] = true;
   }
 
@@ -55,6 +61,7 @@ export class Engine {
     //this.renderer.init(this.grid);
 
     this.lastUpdate = Date.now();
+    window.setInterval(this.handleInput.bind(this), 100);
     window.requestAnimationFrame(this.update.bind(this));
   }
 
@@ -121,37 +128,40 @@ export class Engine {
     }
   }
 
-  update() {
-    if (!this.debounce) {
-      this.debounce = true;
-      setTimeout(() => (this.debounce = false), 75);
-
-      const dir = { x: 0, y: 0 };
-
-      if (this.keys["w"]) {
-        dir.y -= 1;
-        this.updateGrid2();
-      }
-      if (this.keys["s"]) {
-        dir.y += 1;
-        this.updateGrid2();
-      }
-      if (this.keys["a"]) {
-        dir.x -= 1;
-        this.updateGrid2();
-      }
-      if (this.keys["d"]) {
-        dir.x += 1;
-        this.updateGrid2();
-      }
-
-      if (dir.x !== 0 || dir.y !== 0) {
-        this.gridOffset.x += dir.x;
-        this.gridOffset.y += dir.y;
-        this.updateGrid2();
-      }
+  handleInput() {
+    if (this.inputDebounce) {
+      return;
     }
 
+    this.inputDebounce = true;
+    window.clearTimeout(this.debounceTimeout);
+    this.debounceTimeout = window.setTimeout(() => {
+      this.inputDebounce = false;
+    }, 100);
+
+    const dir = { x: 0, y: 0 };
+
+    if (this.keys["w"]) {
+      dir.y -= 1;
+    }
+    if (this.keys["s"]) {
+      dir.y += 1;
+    }
+    if (this.keys["a"]) {
+      dir.x -= 1;
+    }
+    if (this.keys["d"]) {
+      dir.x += 1;
+    }
+
+    if (dir.x !== 0 || dir.y !== 0) {
+      this.gridOffset.x += dir.x;
+      this.gridOffset.y += dir.y;
+      this.updateGrid2();
+    }
+  }
+
+  update() {
     this.renderer.render(this.chunks, this.gridOffset);
 
     const deltaTime = Date.now() - this.lastUpdate;
